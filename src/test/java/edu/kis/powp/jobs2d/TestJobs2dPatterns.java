@@ -7,32 +7,34 @@ import java.util.logging.Logger;
 
 import edu.kis.legacy.drawer.panel.DefaultDrawerFrame;
 import edu.kis.legacy.drawer.panel.DrawPanelController;
+import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.drivers.adapter.DrawerAdapter;
+import edu.kis.powp.jobs2d.drivers.adapter.LineDrawerAdapter;
 import edu.kis.powp.jobs2d.events.SelectChangeVisibleOptionListener;
 import edu.kis.powp.jobs2d.events.SelectTestFigureOptionListener;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
-import edu.kis.powp.jobs2d.magicpresets.FiguresJoe;
 
 public class TestJobs2dPatterns {
 	private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
 	/**
 	 * Setup test concerning preset figures in context.
-	 * 
+	 *
 	 * @param application Application context.
 	 */
 	private static void setupPresetTests(Application application) {
-		SelectTestFigureOptionListener selectTestFigureOptionListener = new SelectTestFigureOptionListener(
-				DriverFeature.getDriverManager());
+		application.addTest("Figure Joe 1",
+				new SelectTestFigureOptionListener(DriverFeature.getDriverManager(), 1));
 
-		application.addTest("Figure Joe 1", selectTestFigureOptionListener);
+		application.addTest("Figure Joe 2",
+				new SelectTestFigureOptionListener(DriverFeature.getDriverManager(), 2));
 	}
 
 	/**
 	 * Setup driver manager, and set default driver for application.
-	 * 
+	 *
 	 * @param application Application context.
 	 */
 	private static void setupDrivers(Application application) {
@@ -40,40 +42,53 @@ public class TestJobs2dPatterns {
 		DriverFeature.addDriver("Logger Driver", loggerDriver);
 		DriverFeature.getDriverManager().setCurrentDriver(loggerDriver);
 
-		Job2dDriver testDriver = new DrawerAdapter();
-		DriverFeature.addDriver("Drawer Simulator", testDriver);
+		Job2dDriver drawerAdapter = new DrawerAdapter();
+		DriverFeature.addDriver("Drawer Adapter", drawerAdapter);
+
+		Job2dDriver dottedAdapter = new LineDrawerAdapter(LineFactory::getDottedLine);
+		DriverFeature.addDriver("Dotted Drawer Adapter", dottedAdapter);
+
+		Job2dDriver specialAdapter = new LineDrawerAdapter(LineFactory::getSpecialLine);
+		DriverFeature.addDriver("Special Drawer Adapter", specialAdapter);
 
 		DriverFeature.updateDriverInfo();
 	}
 
 	/**
 	 * Auxiliary routines to enable using Buggy Simulator.
-	 * 
+	 *
 	 * @param application Application context.
 	 */
 	private static void setupDefaultDrawerVisibilityManagement(Application application) {
 		DefaultDrawerFrame defaultDrawerWindow = DefaultDrawerFrame.getDefaultDrawerFrame();
-		application.addComponentMenuElementWithCheckBox(DrawPanelController.class, "Default Drawer Visibility",
-				new SelectChangeVisibleOptionListener(defaultDrawerWindow), true);
+		application.addComponentMenuElementWithCheckBox(
+				DrawPanelController.class,
+				"Default Drawer Visibility",
+				new SelectChangeVisibleOptionListener(defaultDrawerWindow),
+				true
+		);
 		defaultDrawerWindow.setVisible(true);
 	}
 
 	/**
 	 * Setup menu for adjusting logging settings.
-	 * 
+	 *
 	 * @param application Application context.
 	 */
 	private static void setupLogger(Application application) {
 		application.addComponentMenu(Logger.class, "Logger", 0);
 		application.addComponentMenuElement(Logger.class, "Clear log",
 				(ActionEvent e) -> application.flushLoggerOutput());
-		application.addComponentMenuElement(Logger.class, "Fine level", (ActionEvent e) -> logger.setLevel(Level.FINE));
-		application.addComponentMenuElement(Logger.class, "Info level", (ActionEvent e) -> logger.setLevel(Level.INFO));
+		application.addComponentMenuElement(Logger.class, "Fine level",
+				(ActionEvent e) -> logger.setLevel(Level.FINE));
+		application.addComponentMenuElement(Logger.class, "Info level",
+				(ActionEvent e) -> logger.setLevel(Level.INFO));
 		application.addComponentMenuElement(Logger.class, "Warning level",
 				(ActionEvent e) -> logger.setLevel(Level.WARNING));
 		application.addComponentMenuElement(Logger.class, "Severe level",
 				(ActionEvent e) -> logger.setLevel(Level.SEVERE));
-		application.addComponentMenuElement(Logger.class, "OFF logging", (ActionEvent e) -> logger.setLevel(Level.OFF));
+		application.addComponentMenuElement(Logger.class, "OFF logging",
+				(ActionEvent e) -> logger.setLevel(Level.OFF));
 	}
 
 	/**
@@ -94,5 +109,4 @@ public class TestJobs2dPatterns {
 			}
 		});
 	}
-
 }
