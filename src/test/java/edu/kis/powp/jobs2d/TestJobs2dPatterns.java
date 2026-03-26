@@ -17,6 +17,7 @@ import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
 import edu.kis.powp.jobs2d.events.SelectTestFigureJaneOptionListener;
 import edu.kis.powp.jobs2d.events.SelectTriangleTestOptionListener;
+import edu.kis.powp.jobs2d.events.SelectRectangleTestOptionListener;
 
 public class TestJobs2dPatterns {
 	private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -27,7 +28,9 @@ public class TestJobs2dPatterns {
 	 * @param application Application context.
 	 */
 	private static void setupPresetTests(Application application) {
-		application.addTest("Command Rectangle", new SelectTriangleTestOptionListener());
+		application.addTest("Command Triangle", new SelectTriangleTestOptionListener());
+
+		application.addTest("Command Rectangle", new SelectRectangleTestOptionListener());
 
 		application.addTest("Figure Joe 1",
 				new SelectTestFigureOptionListener(DriverFeature.getDriverManager(), 1));
