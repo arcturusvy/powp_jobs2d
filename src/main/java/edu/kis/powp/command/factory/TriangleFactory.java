@@ -5,8 +5,8 @@ import edu.kis.powp.command.OperateToCommand;
 import edu.kis.powp.command.SetPositionCommand;
 import edu.kis.powp.jobs2d.Job2dDriver;
 
-public class RectangleFactory {
-    public static ComplexCommand createRectangle(Job2dDriver driver, int x, int y, int width, int height) {
+public class TriangleFactory {
+    public static ComplexCommand createTriangle(Job2dDriver driver, int x, int y, int width, int height) {
         ComplexCommand command = new ComplexCommand();
 
         command.addCommand(new SetPositionCommand(driver, x, y));
